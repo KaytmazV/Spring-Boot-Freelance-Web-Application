@@ -2,17 +2,25 @@ package com.volkankaytmaz.backendproject2.Services;
 
 import com.volkankaytmaz.backendproject2.Entity.Customer;
 import com.volkankaytmaz.backendproject2.Repository.CustomerRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
+
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 public class CustomerService {
 
     @Autowired
     private final CustomerRepository customerRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -22,7 +30,8 @@ public class CustomerService {
         try {
             return customerRepository.findAll();
         } catch (Exception e) {
-            throw new RuntimeException("Error finding all customers");
+            logger.error("Tüm müşteriler bulunurken hata oluştu", e);
+            throw new RuntimeException("Tüm müşteriler bulunurken hata oluştu");
         }
     }
 
@@ -32,17 +41,15 @@ public class CustomerService {
 
     }
 
-    public Customer saveCustomer(Customer customer) {
-        if (customer.getId() == null || customer.getPhoneNumber() == null) {
-            throw new IllegalArgumentException("Müşteri bilgileri eksik, lütfen tekrar deneyin.");
-        }
-        if (customer.getName() == null) {
-            throw new IllegalArgumentException(("Müşteri ismi eksik, lütfen tekrar deneyin"));
-        }
+    public Customer saveCustomer(@Valid Customer customer) {
+        validateCustomer(customer);
         try {
-            return customerRepository.save(customer);
+            Customer savedCustomer = customerRepository.save(customer);
+            logger.info("Müşteri kaydedildi : {}", savedCustomer.getId());
+            return savedCustomer;
         } catch (Exception e) {
-            throw new RuntimeException("Error save customer " + customer.getPhoneNumber());
+            logger.error("Müşteri kaydedilirken hata oluştu", e);
+            throw new RuntimeException("Error save customer " + e.getMessage());
         }
     }
 
@@ -71,6 +78,16 @@ public class CustomerService {
         return "müşteri silindi";
     } catch (Exception e) {
         throw new RuntimeException("Error delete customer id " + id);}
+    }
+
+
+    private void validateCustomer(Customer customer) {
+        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Müşteri ismi boş olamaz.");
+        }
+        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().trim().isEmpty()) {
+            throw new IllegalArgumentException("Müşteri telefon numarası boş olamaz.");
+        }
     }
 
 }
