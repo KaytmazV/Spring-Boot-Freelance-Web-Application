@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -17,33 +19,33 @@ public class Treatment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private Long id;
+
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Customers customer;
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, orphanRemoval = true)
+    List <CustomerTreatment> customerTreatments;
 
-    public Long getID() {
+    public Long getId() {
         return id;
     }
-    public void setID(Long id) {
+
+    public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    @ManyToOne(optional = false)
-    private Customers customers;
-
-    public Customers getCustomers() {
-        return customers;
+    public List<CustomerTreatment> getCustomerTreatments() {
+        return customerTreatments;
     }
 
-    public void setCustomers(Customers customers) {
-        this.customers = customers;
+    public void setCustomerTreatments(List<CustomerTreatment> customerTreatments) {
+        this.customerTreatments = customerTreatments;
     }
 }
