@@ -9,11 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
-@Data
+
 public class Treatment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
     private String name;
+
+
 }
