@@ -23,7 +23,7 @@ public class CustomerTreatment {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    private Customers customers;
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "treatment_id", nullable = false)
@@ -55,11 +55,11 @@ public class CustomerTreatment {
         this.treatment = treatment;
     }
 
-    public Customers getCustomers() {
-        return customers;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomers(Customers customers) {
-        this.customers = customers;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
