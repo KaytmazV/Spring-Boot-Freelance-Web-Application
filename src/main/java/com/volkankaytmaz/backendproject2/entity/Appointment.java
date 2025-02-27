@@ -28,7 +28,6 @@ public class Appointment {
     @Column(name = "service")
     private List<String> services;
 
-    private String status; // SCHEDULED, COMPLETED, CANCELLED
-
+    private String status;
     private String notes;
 }
