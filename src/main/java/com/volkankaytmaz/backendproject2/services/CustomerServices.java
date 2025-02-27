@@ -1,63 +1,74 @@
 package com.volkankaytmaz.backendproject2.services;
 
-
+import com.volkankaytmaz.backendproject2.dto.CustomerDTO;
 import com.volkankaytmaz.backendproject2.entity.Customer;
 import com.volkankaytmaz.backendproject2.expection.ResourceNotFoundException;
+import com.volkankaytmaz.backendproject2.mapper.CustomerMapper;
 import com.volkankaytmaz.backendproject2.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class CustomerServices {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @Autowired
-    public CustomerServices(CustomerRepository customerRepository) {
+    public CustomerServices(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
-    public List<Customer> findAll() {
-       try {
-           return customerRepository.findAll();
-       } catch (Exception e) {
-           throw new RuntimeException("Müşteriler alınırken bir hata oluştu: " + e.getMessage());
-       }
+    public List<CustomerDTO> findAll() {
+        try {
+            List<Customer> customers = customerRepository.findAll();
+            return customers.stream()
+                    .map(customerMapper::toDTO)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Müşteriler alınırken bir hata oluştu: " + e.getMessage());
+        }
     }
 
-    public Customer findById(Long id) {
-        return customerRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("id bulunamadı: " + id));
+    public CustomerDTO findById(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("id bulunamadı: " + id));
+        return customerMapper.toDTO(customer);
     }
 
-    public Customer save(Customer customer) {
-        if (customer == null || customer.getName() == null) {
+    public CustomerDTO save(CustomerDTO customerDTO) {
+        if (customerDTO == null || customerDTO.getName() == null) {
             throw new IllegalArgumentException("Müşteri bilgileri eksik, lütfen tekrar deneyin.");
         }
-        if (customer.getPhone() == null ){
+        if (customerDTO.getPhone() == null) {
             throw new IllegalArgumentException("Telefon numarası eksik, lütfen tekrar deneyin.");
         }
         try {
-            return customerRepository.save(customer);
+            Customer customer = customerMapper.toEntity(customerDTO);
+            Customer savedCustomer = customerRepository.save(customer);
+            return customerMapper.toDTO(savedCustomer);
         } catch (Exception e) {
             throw new RuntimeException("Müşteri oluşturulurken bir hata oluştu: " + e.getMessage());
         }
     }
 
-    public Optional<Customer> updateCustomer(Long id, Customer customer) {
+    public Optional<CustomerDTO> updateCustomer(Long id, CustomerDTO customerDTO) {
         Optional<Customer> customerOptional = customerRepository.findById(id);
-        if (customerOptional.isPresent()) {
+        if (customerOptional.isEmpty()) {
             return Optional.empty();
         }
         try {
-            return Optional.of(customerRepository.save(customer));
-
+            Customer customer = customerMapper.toEntity(customerDTO);
+            customer.setId(id.intValue());
+            Customer updatedCustomer = customerRepository.save(customer);
+            return Optional.of(customerMapper.toDTO(updatedCustomer));
         } catch (Exception e) {
             throw new RuntimeException("Müşteri güncellenirken bir hata oluştu: " + e.getMessage());
         }
@@ -75,8 +86,8 @@ public class CustomerServices {
         try {
             customerRepository.deleteAll();
         } catch (Exception e) {
-            throw new RuntimeException("Müşteriler bir hata oluştu: " + e.getMessage());
+            throw new RuntimeException("Müşteriler silinirken bir hata oluştu: " + e.getMessage());
         }
     }
-
 }
+
