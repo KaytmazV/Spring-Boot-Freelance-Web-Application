@@ -1,7 +1,7 @@
 package com.volkankaytmaz.backendproject2.controller;
 
 import com.volkankaytmaz.backendproject2.dto.CustomerDTO;
-import com.volkankaytmaz.backendproject2.services.CustomerServices;
+import com.volkankaytmaz.backendproject2.service.CustomerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.volkankaytmaz.backendproject2.services;
+package com.volkankaytmaz.backendproject2.service;
 
 import com.volkankaytmaz.backendproject2.dto.CustomerDTO;
 import com.volkankaytmaz.backendproject2.dto.CustomerWithAppointmentsDTO;
