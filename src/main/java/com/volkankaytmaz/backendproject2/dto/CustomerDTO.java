@@ -8,10 +8,12 @@ import java.util.List;
 
 @Data
 public class CustomerDTO {
-    private int id;
+    private Long id;
     private String name;
     private String phone;
     private LocalTime lastVisit;
     private LocalDateTime nextAppointment;
     private List<String> treatments;
+    // Appointments'ı kaldırıyoruz
 }
+

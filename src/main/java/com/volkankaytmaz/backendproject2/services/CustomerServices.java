@@ -1,6 +1,7 @@
 package com.volkankaytmaz.backendproject2.services;
 
 import com.volkankaytmaz.backendproject2.dto.CustomerDTO;
+import com.volkankaytmaz.backendproject2.dto.CustomerWithAppointmentsDTO;
 import com.volkankaytmaz.backendproject2.entity.Customer;
 import com.volkankaytmaz.backendproject2.expection.ResourceNotFoundException;
 import com.volkankaytmaz.backendproject2.mapper.CustomerMapper;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,20 +27,20 @@ public class CustomerServices {
     }
 
     public List<CustomerDTO> findAll() {
-        try {
-            List<Customer> customers = customerRepository.findAll();
-            return customers.stream()
-                    .map(customerMapper::toDTO)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException("Müşteriler alınırken bir hata oluştu: " + e.getMessage());
-        }
+        List<Customer> customers = customerRepository.findAll();
+        return customerMapper.toDTOList(customers);
     }
 
     public CustomerDTO findById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("id bulunamadı: " + id));
         return customerMapper.toDTO(customer);
+    }
+
+    public CustomerWithAppointmentsDTO findByIdWithAppointments(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("id bulunamadı: " + id));
+        return customerMapper.toDTOWithAppointments(customer);
     }
 
     public CustomerDTO save(CustomerDTO customerDTO) {
@@ -66,7 +66,7 @@ public class CustomerServices {
         }
         try {
             Customer customer = customerMapper.toEntity(customerDTO);
-            customer.setId(id.intValue());
+            customer.setId(id); // Burada artık Long türünde id kullanılıyor
             Customer updatedCustomer = customerRepository.save(customer);
             return Optional.of(customerMapper.toDTO(updatedCustomer));
         } catch (Exception e) {
