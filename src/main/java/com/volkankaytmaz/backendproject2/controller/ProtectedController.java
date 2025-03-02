@@ -10,7 +10,7 @@ public class ProtectedController {
 
     @GetMapping
     public String getProtectedInfo() {
-        return "Bu, korumali bir endpoint'tir. Sadece kimliği doğrulanmış kullanıcılar erişebilir.";
+        return "Bu, korumalı bir endpoint'tir. Sadece kimliği doğrulanmış kullanıcılar erişebilir.";
     }
 }
 
