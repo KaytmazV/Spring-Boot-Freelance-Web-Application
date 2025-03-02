@@ -6,18 +6,25 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    // Örnek kullanıcı - Gerçek uygulamada veritabanından çekin
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public CustomUserDetailsService(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // TODO: Gerçek uygulamada, bu bilgileri veritabanından almalısınız
         if ("admin".equals(username)) {
             return new User(
                     "admin",
-                    new BCryptPasswordEncoder().encode("admin123"),
+                    passwordEncoder.encode("admin123"),
                     new ArrayList<>()
             );
         } else {
@@ -25,3 +32,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
     }
 }
+
