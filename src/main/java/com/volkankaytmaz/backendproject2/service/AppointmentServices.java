@@ -40,7 +40,7 @@ public class AppointmentServices {
 
     public AppointmentDTO findById(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Appointment id: " + id + " Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Randevu bulunamadı: " + id));
         return appointmentMapper.toAppointmentDTO(appointment);
     }
 
@@ -62,7 +62,7 @@ public class AppointmentServices {
 
     public AppointmentDTO update(Long id, AppointmentDTO appointmentDTO) {
         Appointment existingAppointment = appointmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Appointment id: " + id + " Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Randevu bulunamadı: " + id));
 
         Customer customer = customerRepository.findById(appointmentDTO.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Müşteri bulunamadı: " + appointmentDTO.getCustomerId()));
@@ -77,7 +77,7 @@ public class AppointmentServices {
 
     public void delete(Long id) {
         if (!appointmentRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Appointment id: " + id + " Not Found");
+            throw new ResourceNotFoundException("Randevu bulunamadı: " + id);
         }
         appointmentRepository.deleteById(id);
     }
