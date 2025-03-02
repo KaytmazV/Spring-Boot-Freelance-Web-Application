@@ -1,7 +1,7 @@
 package com.volkankaytmaz.backendproject2.security;
 
 import com.volkankaytmaz.backendproject2.entity.User;
-import com.volkankaytmaz.backendproject2.repository.UserRepository;
+import com.volkankaytmaz.backendproject2.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,42 +16,26 @@ import java.io.IOException;
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public OAuth2LoginSuccessHandler(JwtUtil jwtUtil, UserRepository userRepository) {
+    public OAuth2LoginSuccessHandler(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
-        User user = processOAuthPostLogin(oAuth2User);
+        User user = userService.processOAuthPostLogin(oAuth2User);
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        // Token'ı response header'a ekle
+        // Add token to response header
         response.addHeader("Authorization", "Bearer " + token);
 
-        // Kullanıcıyı ana sayfaya yönlendir
-        getRedirectStrategy().sendRedirect(request, response, "/");
-    }
-
-    private User processOAuthPostLogin(OAuth2User oAuth2User) {
-        String email = oAuth2User.getAttribute("email");
-        User existUser = userRepository.findByEmail(email);
-
-        if (existUser == null) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(oAuth2User.getAttribute("name"));
-            newUser.setAuthProvider("GOOGLE");
-            newUser.setRole("USER");
-            return userRepository.save(newUser);
-        }
-
-        return existUser;
+        // Redirect to home page or a specific endpoint
+        getRedirectStrategy().sendRedirect(request, response, "/api/public/home");
     }
 }
 
