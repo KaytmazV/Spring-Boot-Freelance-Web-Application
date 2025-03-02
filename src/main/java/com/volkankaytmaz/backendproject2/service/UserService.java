@@ -2,36 +2,23 @@ package com.volkankaytmaz.backendproject2.service;
 
 import com.volkankaytmaz.backendproject2.entity.User;
 import com.volkankaytmaz.backendproject2.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public User processOAuthPostLogin(OAuth2User oAuth2User) {
-        String email = oAuth2User.getAttribute("email");
-        User existUser = userRepository.findByEmail(email);
-
-        if (existUser == null) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(oAuth2User.getAttribute("name"));
-            newUser.setAuthProvider("GOOGLE");
-            newUser.setRole("USER"); // Default role for new users
-            newUser.setPassword(passwordEncoder.encode("changeme")); // Set a default password
-            return userRepository.save(newUser);
-        }
-
-        return existUser;
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(String email, String name, String password) {
