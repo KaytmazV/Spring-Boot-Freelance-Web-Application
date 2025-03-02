@@ -73,5 +73,12 @@ public class UserService {
         }
         return token;
     }
+
+    public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER");
+        user.setAuthProvider("LOCAL");
+        return userRepository.save(user);
+    }
 }
 
