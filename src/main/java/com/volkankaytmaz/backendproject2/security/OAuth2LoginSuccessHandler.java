@@ -31,10 +31,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        // Add token to response header
         response.addHeader("Authorization", "Bearer " + token);
 
-        // Redirect to home page or a specific endpoint
         getRedirectStrategy().sendRedirect(request, response, "/api/public/home");
     }
 }
