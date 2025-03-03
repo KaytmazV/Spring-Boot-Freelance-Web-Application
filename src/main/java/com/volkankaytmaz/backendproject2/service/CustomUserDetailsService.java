@@ -1,4 +1,4 @@
-package com.volkankaytmaz.backendproject2.security;
+package com.volkankaytmaz.backendproject2.service;
 
 import com.volkankaytmaz.backendproject2.entity.User;
 import com.volkankaytmaz.backendproject2.repository.UserRepository;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,10 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Kullanıcı bulunamadı: " + username);
-        }
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı: " + username));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
