@@ -1,73 +1,73 @@
-# Salon Yönetim Sistemi Backend
+# Salon Management System Backend
 
-## Proje Açıklaması
+## Project Description
 
-Bu proje, modern bir güzellik salonu için kapsamlı bir yönetim sistemi sağlayan bir backend uygulamasıdır. Spring Boot framework'ü kullanılarak geliştirilmiş olup, güvenli ve ölçeklenebilir RESTful API'ler sunar. Sistem, randevu yönetimi, müşteri ilişkileri yönetimi (CRM), hizmet kataloğu yönetimi ve içerik yönetimi (blog gönderileri) gibi temel işlevleri kapsar.
+This project is a comprehensive backend application for a modern beauty salon management system. Developed using the Spring Boot framework, it provides secure and scalable RESTful APIs. The system covers core functionalities such as appointment management, customer relationship management (CRM), service catalog management, and content management (blog posts).
 
-## İçindekiler
+## Table of Contents
 
-1. [Özellikler](#özellikler)
-2. [Teknoloji Yığını](#teknoloji-yığını)
-3. [Sistem Gereksinimleri](#sistem-gereksinimleri)
-4. [Kurulum](#kurulum)
-5. [Konfigürasyon](#konfigürasyon)
-6. [API Dokümantasyonu](#api-dokümantasyonu)
-7. [Güvenlik](#güvenlik)
-8. [Veritabanı Şeması](#veritabanı-şeması)
-9. [Test](#test)
-10. [Dağıtım](#dağıtım)
-11. [Katkıda Bulunma](#katkıda-bulunma)
-12. [Sürüm Geçmişi](#sürüm-geçmişi)
-13. [Lisans](#lisans)
-14. [İletişim](#iletişim)
+1. [Features](#features)
+2. [Technology Stack](#technology-stack)
+3. [System Requirements](#system-requirements)
+4. [Installation](#installation)
+5. [Configuration](#configuration)
+6. [API Documentation](#api-documentation)
+7. [Security](#security)
+8. [Database Schema](#database-schema)
+9. [Testing](#testing)
+10. [Deployment](#deployment)
+11. [Contributing](#contributing)
+12. [Version History](#version-history)
+13. [License](#license)
+14. [Contact](#contact)
 
-## Özellikler
+## Features
 
-1. **Kullanıcı Yönetimi**
-    - Kayıt ve giriş işlemleri
-    - Rol tabanlı yetkilendirme (Admin, Çalışan, Müşteri)
-    - JWT tabanlı kimlik doğrulama
+1. **User Management**
+    - Registration and login processes
+    - Role-based authorization (Admin, Employee, Customer)
+    - JWT-based authentication
 
-2. **Müşteri Yönetimi**
-    - Müşteri profili oluşturma ve güncelleme
-    - Müşteri geçmişi ve tercihlerinin takibi
+2. **Customer Management**
+    - Create and update customer profiles
+    - Track customer history and preferences
 
-3. **Randevu Yönetimi**
-    - Randevu oluşturma, güncelleme ve iptal etme
-    - Çakışma kontrolü ve otomatik zaman önerisi
-    - Hatırlatma bildirimleri (e-posta entegrasyonu)
+3. **Appointment Management**
+    - Create, update, and cancel appointments
+    - Conflict checking and automatic time suggestion
+    - Reminder notifications (email integration)
 
-4. **Hizmet Yönetimi**
-    - Hizmet kataloğu yönetimi
-    - Fiyatlandırma ve süre bilgisi
+4. **Service Management**
+    - Service catalog management
+    - Pricing and duration information
 
-5. **Blog Yönetimi**
-    - Blog gönderilerinin oluşturulması ve yönetimi
-    - Kategori ve etiket sistemi
+5. **Blog Management**
+    - Creation and management of blog posts
+    - Category and tag system
 
-6. **Raporlama**
-    - Gelir raporları
-    - Müşteri istatistikleri
-    - Hizmet popülerlik analizleri
+6. **Reporting**
+    - Revenue reports
+    - Customer statistics
+    - Service popularity analysis
 
-## Teknoloji Yığını
+## Technology Stack
 
 - **Backend:** Java 11, Spring Boot 2.5.x
-- **Güvenlik:** Spring Security, JSON Web Tokens (JWT)
-- **Veritabanı:** MySQL 8.0
+- **Security:** Spring Security, JSON Web Tokens (JWT)
+- **Database:** MySQL 8.0
 - **ORM:** Hibernate
-- **API Dokümantasyonu:** Swagger / OpenAPI 3.0
-- **Build Aracı:** Maven
-- **Test:** JUnit 5, Mockito
-- **Loglama:** SLF4J & Logback
-- **Diğer:** Lombok, MapStruct
+- **API Documentation:** Swagger / OpenAPI 3.0
+- **Build Tool:** Maven
+- **Testing:** JUnit 5, Mockito
+- **Logging:** SLF4J & Logback
+- **Others:** Lombok, MapStruct
 
-## Sistem Gereksinimleri
+## System Requirements
 
-- JDK 11 veya üzeri
-- Maven 3.6 veya üzeri
-- MySQL 8.0 veya üzeri
+- JDK 11 or higher
+- Maven 3.6 or higher
+- MySQL 8.0 or higher
 
-## Kurulum
+## Installation
 
-1. Projeyi klonlayın:
+1. Clone the project:
