@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Appointment")
+@RequestMapping("/Appointment")  // Keep the same casing as in your URL
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AppointmentController {
 
     private final AppointmentServices appointmentServices;

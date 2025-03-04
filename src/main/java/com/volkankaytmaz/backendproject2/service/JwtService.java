@@ -3,23 +3,27 @@ package com.volkankaytmaz.backendproject2.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class JwtService {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
     @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private String secretKey;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
@@ -38,12 +42,20 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            logger.debug("Attempting to parse JWT token");
+            Claims claims = Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            logger.debug("JWT token parsed successfully");
+            return claims;
+        } catch (Exception e) {
+            logger.error("Error parsing JWT token: {}", e.getMessage());
+            throw e;
+        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -71,8 +83,9 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    private SecretKey getSignKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
+    private Key getSignKey() {
+        logger.debug("Getting signing key with secret: {}", secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

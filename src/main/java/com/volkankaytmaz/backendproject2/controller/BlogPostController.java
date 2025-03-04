@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("blogpost")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class BlogPostController {
 
     private final BlogPostService blogPostService;

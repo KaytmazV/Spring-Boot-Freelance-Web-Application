@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/customers")  // Changed from /api/customers if it existed
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CustomerController {
-
     private final CustomerServices customerServices;
 
     @Autowired
